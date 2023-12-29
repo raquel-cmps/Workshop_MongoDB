@@ -5,11 +5,10 @@ import org.couse.workshopmongo.dto.UserDTO;
 import org.couse.workshopmongo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +30,16 @@ public class UserResource {
     public ResponseEntity<UserDTO> finById(@PathVariable String id){
         User obj = service.findById(id);
         return ResponseEntity.ok().body(new UserDTO(obj));
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> insert(@RequestBody UserDTO dto){
+        User obj = service.fromDTO(dto);
+        obj = service.insert(obj);
+        //retornar uma resposta vazia, com o cabeçalho com a url do recurso criado
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+        return ResponseEntity.created(uri).build(); //codigo 201 = criado um novo recurso
+
     }
 }
 
