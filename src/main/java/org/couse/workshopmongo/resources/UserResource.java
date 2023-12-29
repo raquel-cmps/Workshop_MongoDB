@@ -45,5 +45,13 @@ public class UserResource {
         service.delete(id);
         return ResponseEntity.noContent().build(); ////codigo 204 = quanto nao precisa retornar nada
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Void> update(@RequestBody UserDTO dto, @PathVariable String id){
+        User obj = service.fromDTO(dto);
+        obj.setId(id);
+        obj = service.update(obj);
+        return ResponseEntity.noContent().build();
+    }
 }
 
