@@ -1,13 +1,13 @@
 package org.couse.workshopmongo.resources;
 
 import org.couse.workshopmongo.domain.Post;
+import org.couse.workshopmongo.resources.util.URL;
 import org.couse.workshopmongo.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/posts")
@@ -23,5 +23,11 @@ public class PostResource {
         return ResponseEntity.ok().body(obj);
     }
 
+    @GetMapping(value = "/titleSearch")
+    public ResponseEntity<List<Post>> finByTitle(@RequestParam(value = "text", defaultValue = "") String text){
+        text = URL.decodeParam(text);
+        List<Post> list = service.findByTitle(text);
+        return ResponseEntity.ok().body(list);
+    }
 }
 
